@@ -1,0 +1,4 @@
+1. url로 접속
+2. 기본 admin 계정으로 접속 (default.ini에 따르면 아이디 admin, 비밀번호 admin)
+3. 설정에 들어가면 anonymous authentication에 대한 기본 org 이름이 있고, 그 이름이 flag
+(그 이름이 flag라는 건 default.ini에 명시되어 있음)
