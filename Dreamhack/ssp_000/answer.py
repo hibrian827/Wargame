@@ -1,6 +1,5 @@
 from pwn import *
 
-
 port =  9447
 rem = remote("host3.dreamhack.games", port)
 
