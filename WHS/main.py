@@ -4,7 +4,8 @@ from pwn import *
 # rem = remote("srv1.kitriwhs.kr", port)
 
 
-rem = proc("./a piece of pie")
+rem = process(["./a piece of pie"])
+rem.interactive()
 
 puts_offset = 0x80e50
 puts_plt = 0x10b0
