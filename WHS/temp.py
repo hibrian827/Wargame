@@ -4,23 +4,53 @@ from Crypto.Cipher import AES
 
 
 # 서버 연결
-# host = "srv1.kitriwhs.kr"
-# port = 21640
-host = "host1.dreamhack.games"
-port = 21581
+host = "srv1.kitriwhs.kr"
+port = 13573
 r = remote(host, port)
 
 BLOCK_SIZE = 16
 
-# 16-byte의 0 암호화해서 E(k, k) 구하기
+# iv 구하기
 p = bytes(16).hex().encode()
 
 r.sendlineafter(b"[3] Get Flag\n", b"1")
 r.sendlineafter(b"(hex): ", p)
+enc_p = bytes.fromhex(r.recvline().decode())
+print(enc_p)
 
-enc_iv = r.recvline().decode()
-enc_iv = bytes.fromhex(enc_iv)
+r.sendlineafter(b"[3] Get Flag\n", b"2")
+r.sendlineafter(b"(hex): ", p)
+dec_p = bytes.fromhex(r.recvline().decode())
+print(dec_p)
+print(r.recvline())
+print(r.recvline())
+print(r.recvline())
+r.sendline(b"2")
+print(r.recvuntil(b"(hex): "))
+r.sendline(dec_p)
+dec2_p = bytes.fromhex(r.recvline().decode())
+print(dec2_p)
 
+r.sendlineafter(b"[3] Get Flag\n", b"2")
+r.sendlineafter(b"(hex): ", dec2_p)
+dec3_p = bytes.fromhex(r.recvline().decode())
+print(dec3_p)
+
+r.sendlineafter(b"[3] Get Flag\n", b"2")
+r.sendlineafter(b"(hex): ", dec3_p)
+dec4_p = bytes.fromhex(r.recvline().decode())
+print(dec4_p)
+
+r.sendlineafter(b"[3] Get Flag\n", b"2")
+r.sendlineafter(b"(hex): ", dec4_p)
+dec5_p = bytes.fromhex(r.recvline().decode())
+print(dec5_p)
+
+r.sendlineafter(b"[3] Get Flag\n", b"2")
+r.sendlineafter(b"(hex): ", dec5_p + dec4_p + dec3_p + dec2_p + dec_p + p + enc_p)
+iv = bytes.fromhex(r.recvline().decode())[48:64]
+
+print(iv)
 
 # 키 구하기
 r.sendlineafter(b"[3] Get Flag\n", b"2")
