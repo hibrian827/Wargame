@@ -24,7 +24,7 @@ enc_iv = bytes.fromhex(enc_iv)
 
 # 키 구하기
 r.sendlineafter(b"[3] Get Flag\n", b"2")
-r.sendlineafter(b"(hex): ", p + enc_iv.hex().encode())
+r.sendlineafter(b"(hex): ", p * 4 + enc_iv.hex().encode())
 
 iv = r.recvline().decode()
 iv = (bytes.fromhex(iv)[16:32]).hex()

