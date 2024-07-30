@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>게시글 목록</h1>
+    </header>
+    <div class="container">
+        <div class="top-bar">
+            <form class="search-form" action="/search" method="get">
+                <input type="text" name="q" placeholder="Search">
+                <button type="submit">Search</button>
+            </form>
+            <a href="/create_post" class="create-post-button">게시글 작성</a>
+        </div>
+        <div class="content">
+            <div class="posts">
+                {% for post in posts %}
+                <div class="post">
+                    <h3>{{ post.title }}</h3>
+                    <p>{{ post.content }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="sidebar">
+                <h2>실시간 급상승 검색어</h2>
+                <ol>
+                    {% for keyword in keywords %}
+                    <li>{{ keyword.keyword | safe }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
