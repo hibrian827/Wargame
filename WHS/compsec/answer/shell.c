@@ -2,6 +2,6 @@
 
 int main()
 {
-  char *sh = "/bin/sh";
-  execve(sh, NULL, NULL);
+  write();
+  read("/bin/sh", NULL, NULL);
 }
