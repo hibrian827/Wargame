@@ -11,10 +11,10 @@ int sub_133F(int a1)
   {
     for ( j = 0; j <= 7; ++j )
     {
-      v2 = *(_BYTE *)(a1 + 8LL * i + j);
-      *(_BYTE *)(a1 + 8LL * i + j) = *(_BYTE *)(a1 + 8LL * (8 - i) - 8 + j);
+      v2 = *(_BYTE *)(a1 + 8 * i + j);
+      *(_BYTE *)(a1 + 8 * i + j) = *(_BYTE *)(a1 + 8 * (8 - i) - 8 + j);
       result = j;
-      *(_BYTE *)(8LL * (8 - i) - 8 + a1 + j) = v2;
+      *(_BYTE *)(8 * (8 - i) - 8 + a1 + j) = v2;
     }
   }
   return result;
@@ -32,7 +32,7 @@ int sub_158A(int a1, int a2, unsigned int a3)
     for ( j = 0; j <= 7; ++j )
     {
       result = j;
-      *(_BYTE *)(a1 + 8LL * i + j) ^= *(_BYTE *)((j + i) % a3 + a2);
+      *(_BYTE *)(a1 + 8 * i + j) ^= *(_BYTE *)((j + i) % a3 + a2);
     }
   }
   return result;
@@ -50,10 +50,10 @@ int sub_1407(int a1)
   {
     for ( j = 0; j <= 3; ++j )
     {
-      v2 = *(_BYTE *)(a1 + 8LL * i + j);
-      *(_BYTE *)(8LL * i + a1 + j) = *(_BYTE *)(a1 + 8LL * i + 7 - j);
+      v2 = *(_BYTE *)(a1 + 8 * i + j);
+      *(_BYTE *)(8 * i + a1 + j) = *(_BYTE *)(a1 + 8 * i + 7 - j);
       result = 7 - j;
-      *(_BYTE *)(8LL * i + a1 + result) = v2;
+      *(_BYTE *)(8 * i + a1 + result) = v2;
     }
   }
   return result;
@@ -71,7 +71,7 @@ int sub_1622(int a1, int a2, unsigned int a3)
     for ( j = 0; j <= 7; ++j )
     {
       result = j;
-      *(_BYTE *)(a1 + 8LL * i + j) += *(_BYTE *)((j + i) % a3 + a2);
+      *(_BYTE *)(a1 + 8 * i + j) += *(_BYTE *)((j + i) % a3 + a2);
     }
   }
   return result;
@@ -90,10 +90,10 @@ int sub_14D0(int a1)
     result = (unsigned int)i;
     for ( j = i; j <= 7; ++j )
     {
-      v2 = *(_BYTE *)(a1 + 8LL * i + j);
-      *(_BYTE *)(a1 + 8LL * i + j) = *(_BYTE *)(a1 + 8LL * j + i);
+      v2 = *(_BYTE *)(a1 + 8 * i + j);
+      *(_BYTE *)(a1 + 8 * i + j) = *(_BYTE *)(a1 + 8 * j + i);
       result = i;
-      *(_BYTE *)(8LL * j + a1 + i) = v2;
+      *(_BYTE *)(8 * j + a1 + i) = v2;
     }
   }
   return result;
@@ -108,8 +108,8 @@ int main()
   unsigned int v7; // [rsp+58h] [rbp-8h]
 
   v7 = __readfsqword(0x28u);
-  setvbuf(stdout, 0LL, 2, 0LL);
-  memset(s, 0, 0x40uLL);
+  setvbuf(stdout, 0, 2, 0);
+  memset(s, 0, 0x40);
   for ( i = 0; i <= 7; ++i )
   {
     for ( j = 0; j <= 7; ++j )
@@ -119,19 +119,19 @@ int main()
     }
   }
   sub_133F(s);
-  sub_158A(s, &unk_2037, 8LL);
+  sub_158A(s, &unk_2037, 8);
   sub_1407(s);
-  sub_1622(s, &unk_2040, 8LL);
+  sub_1622(s, &unk_2040, 8);
   sub_14D0(s);
-  if ( !memcmp(s, &unk_2050, 0x40uLL) )
+  if ( !memcmp(s, &unk_2050, 0x40) )
   {
     printf("correct :) flag is ");
     sub_1289();
-    return 0LL;
+    return 0;
   }
   else
   {
     puts("wrong :(");
-    return 1LL;
+    return 1;
   }
 }
