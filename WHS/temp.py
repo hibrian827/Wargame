@@ -1,6 +1,6 @@
 from pwn import *
 
-port = 15089
+port = 11288
 rem = remote("srv1.kitriwhs.kr", port)
 # rem = process("./2D Array/problem/deploy/chall")
 
@@ -14,6 +14,7 @@ ans = [
   [b"\x40",b"\xcf",b"\x64",b"\x3d",b"\x8d",b"\x03",b"\xae",b"\x2e"],
   [b"\x08",b"\x5a",b"\xae",b"\x9a",b"\x11",b"\x9f",b"\xb7",b"\x65"],
 ]
+
 # 1
 for i in range(8):
   for j in range(i, 8):
@@ -61,13 +62,13 @@ for i in range(4):
 print(ans)
 print()
 
-# for i in range(8):
-#   for j in range(8):
-#     ans[i][j] = chr(int.from_bytes(ans[i][j], 'big'))
-# print(ans)
+for i in range(8):
+  for j in range(8):
+    ans[i][j] = chr(int.from_bytes(ans[i][j], 'big')).encode('latin-1')
+print(ans)
 
-for j in range(8):
-  for i in range(8):
+for i in range(8):
+  for j in range(8):
     print(rem.recvuntil(b'? '))
     print(ans[i][j])
     rem.sendline(ans[i][j])

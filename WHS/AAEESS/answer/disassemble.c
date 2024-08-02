@@ -1,3 +1,32 @@
+int sub_14B7(int a1, const char *a2)
+{
+  int v2; // rbx
+  int v3; // rax
+  char **v4; // rsi
+  char **v5; // rdx
+  int result; // rax
+  int v7; // [rsp+4h] [rbp-24h] BYREF
+  unsigned int v8; // [rsp+8h] [rbp-20h]
+
+  v8 = __readfsqword(0x28u);
+  v7 = 0;
+  v2 = EVP_CIPHER_CTX_new();
+  v3 = EVP_aes_128_ecb();
+
+  EVP_EncryptInit_ex(v2, v3, 0LL, a1, 0LL);
+  EVP_CIPHER_CTX_set_padding(v2, 0LL);
+  EVP_EncryptUpdate(v2, a2, &v7, a2, 16LL);
+  
+  v4 = (char **)&a2[v7];
+  EVP_EncryptFinal_ex(v2, v4, &v7);
+  EVP_CIPHER_CTX_free(v2);
+  
+  result = v8 - __readfsqword(0x28u);
+  if ( result )
+    return main(v2, v4, v5);
+  return result;
+}
+
 int sub_138C(int a1)
 {
   int v1; // rbx
@@ -39,24 +68,27 @@ int main(int a1, char **a2, char **a3)
   v9[0] = 0;
   v9[1] = 0;
   v10 = 0;
-  sub_1349(a1, a2, a3);
-  __printf_chk(1, "Enter your PIN: ");
-  __isoc99_scanf("%17s", v9);
+  printf(1, "Enter your PIN: ");
+  scanf("%17s", v9);
   v3 = (int *)v9;
   v4 = (int *)v9;
   do
   {
-    if ( (unsigned int)(*(_BYTE *)v4 - 49) > 7u )
-      goto LABEL_7;
+    if ((unsigned int)(*(_BYTE *)v4 - 49) > 7) goto LABEL_7;
     v4 = (int *)((char *)v4 + 1);
   }
   while ( v4 != &v10 );
+
+
   v6[0] = 0xB7AB67C1F8D54927;
   v6[1] = 0x5FFB3949C076D4C4;
+  
   s2[0] = 0x1DC2F542B5A11946;
   s2[1] = 0xE509394FDF68037A;
+
   v8[0] = 0;
   v8[1] = 0;
+
   do
   {
     LOBYTE(v8[0]) = *(_BYTE *)v3;
@@ -64,12 +96,14 @@ int main(int a1, char **a2, char **a3)
     v3 = (int *)((char *)v3 + 1);
   }
   while ( v3 != &v10 );
+
   if ( memcmp(v6, s2, 0x10) )
   {
     LABEL_7:
     puts("Failed");
     exit(0);
   }
+
   puts("Correct!");
   sub_138C(v9);
   return 0;
