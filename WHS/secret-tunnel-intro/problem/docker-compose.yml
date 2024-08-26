@@ -1,0 +1,44 @@
+version: "3"
+services:
+  extserver:
+    build: 
+      context: .
+      dockerfile: docker/extserver/Dockerfile
+    container_name: extserver
+    volumes:
+      - ./src/extserver/:/home/flaguser/app
+    environment:
+      LC_ALL: C.UTF-8
+    ports:
+      - "8090:8090"
+      - "2222:22"
+    networks:
+      - external_network
+      
+  intserver:
+    build: 
+      context: .
+      dockerfile: docker/intserver/Dockerfile
+    container_name: intserver
+    environment:
+      LC_ALL: C.UTF-8
+    networks:
+      - external_network
+      - internal_network
+
+  flagserver:
+    build: 
+      context: .
+      dockerfile: docker/flagserver/Dockerfile
+    container_name: flagserver
+    environment:
+      LC_ALL: C.UTF-8
+    networks:
+      - internal_network
+
+networks:
+  external_network:
+    driver: bridge
+  internal_network:
+    driver: bridge
+    internal: true
