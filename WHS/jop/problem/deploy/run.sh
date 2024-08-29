@@ -1,0 +1,1 @@
+timeout --foreground 600 ./prob
