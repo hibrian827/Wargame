@@ -9,7 +9,7 @@ for b in old_txt:
   new_txt += bytes.fromhex(str(hex(b ^ 0xEF))[2:].zfill(2))
   if len(new_txt) > 5 :
     if new_txt[-5:] == b'\xE8\xA5\xFB\xFF\xFF':
-      new_txt = new_txt[:-5] + b'\x48\x05\x34\x12\x00\x00'
+      new_txt = new_txt[:-5] + b'\xB8\x78\x56\x34\x12'
       
 
 print(new_txt)
