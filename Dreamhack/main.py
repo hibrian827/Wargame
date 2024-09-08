@@ -1,5 +1,7 @@
 from pwn import *
 
-port = 0
-rem = remote("", 0)
+# port = 0
+# rem = remote("", port)
+
+rop = ROP("./Pwnable/awesome-basics/problem/chall")
 
