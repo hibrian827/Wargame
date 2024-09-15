@@ -1,3 +1,15 @@
+const char *sub_401090()
+{
+  return "/bin/sh";
+}
+
+__int64 sub_4010A6()
+{
+  __int64 savedregs; // [rsp+0h] [rbp+0h]
+
+  return savedregs;
+}
+
 ssize_t sub_4010B6()
 {
   char buf[8]; // [rsp+8h] [rbp-8h] BYREF
