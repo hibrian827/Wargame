@@ -4,8 +4,6 @@ ENV user iofile_aar
 ENV chall_port 7182
 
 RUN apt-get update
-RUN apt-get -y install gdb python3 python3-pip python3-dev git libssl-dev libffi-dev build
-RUN git clone https://github.com/pwndbg/pwndbg && cd pwndbg && ./setup.sh
 RUN apt-get -y install socat
 
 RUN adduser $user
