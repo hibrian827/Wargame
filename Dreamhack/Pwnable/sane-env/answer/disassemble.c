@@ -48,6 +48,7 @@ int main(int argc, const char **argv, const char **envp)
           }
           puts("Environment variable set!");
           break;
+          
         case 2:
           do
             v6 = getchar();
@@ -63,6 +64,7 @@ int main(int argc, const char **argv, const char **envp)
           }
           puts("Environment variable cleared!");
           break;
+          
         case 3:
           size = confstr(0, 0LL, 0LL);
           if ( !size )
