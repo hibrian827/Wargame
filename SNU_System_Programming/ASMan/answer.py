@@ -33,8 +33,6 @@ for i in range(20):
   rem.sendline(asm.encode())
   rem.sendline(b'')
 
-# print(rem.recvuntil(b'which produces '))
-
 for i in range(20):
   rem.recvuntil(b'which produces ')
   target = int(rem.recvline().rstrip().decode())
