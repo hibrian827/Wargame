@@ -1,0 +1,4 @@
+1. ssh stupid_gcc@host3.dreamhack.games -p 24260로 접속
+2. gcc -O3 a.c로 a.out 생성
+3. 프로세스가 자체적으로 a.out 돌리고 이에 따라 flag.txt 생성됨
+4. flag.txt 읽음
