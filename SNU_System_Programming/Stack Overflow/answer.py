@@ -1,6 +1,6 @@
 from pwn import *
 
-port = 10002
+port = 10032
 rem = remote("kayle.snu.ac.kr", port)
 
 rem.recvuntil(b"get_flag() : 0x")

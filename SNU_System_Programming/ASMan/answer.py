@@ -50,5 +50,5 @@ for i in range(20):
 
   rem.sendline(asm.encode())
 
-rem.recvuntil("You passed all!\n")
+rem.recvuntil(b"You passed all!\n")
 print(rem.recvline())
