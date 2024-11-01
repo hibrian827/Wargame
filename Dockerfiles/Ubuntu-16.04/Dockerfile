@@ -19,9 +19,6 @@ RUN cp ./Pwngdb/.gdbinit ~/
  
 RUN apt install -y netcat
 RUN apt-get -y install tmux
-RUN apt-get -y install python3 libssl-dev libffi-dev build-essential
-RUN apt-get -y install python-pip
-RUN pip install --upgrade pip
+RUN apt-get install -y python2.7-dev python-pip libssl-dev libffi-dev build-essential
 RUN pip install pwntools
 RUN apt-get -y install
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1
