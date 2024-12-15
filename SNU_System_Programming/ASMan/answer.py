@@ -10,15 +10,18 @@ for i in range(20):
 
   rem.recvuntil(b'assembly below:\n\n')
 
-  asm = f"""xorq  %r8, %r8
-  .loop:
-    cmpl  ${target}, %r8d
-    je    .done
-    addl  $1, %r8d
-    jmp   .loop
-  .done:
-    xorl  %eax, %eax
-    addl  %r8d, %eax
+  # asm = f"""xorq  %r8, %r8
+  # .loop:
+  #   cmpl  ${target}, %r8d
+  #   je    .done
+  #   addl  $1, %r8d
+  #   jmp   .loop
+  # .done:
+  #   xorl  %eax, %eax
+  #   addl  %r8d, %eax
+  # """
+  asm = f"""xorq  %rax, %rax
+    addq  ${target}, %rax
   """
   rem.sendline(asm.encode())
   rem.sendline(b'')
