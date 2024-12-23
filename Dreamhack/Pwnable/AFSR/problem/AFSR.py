@@ -21,20 +21,6 @@ class AFSR:
         output = b''
         for _ in range(num):
             o = self.getNbits(8)
-            print(o)
             o = int(o, 2)
-            print(o, bytes([o]))
             output += bytes([o])
-            # print(output)
         return output
-
-from Crypto.Util.number import bytes_to_long
-
-FLAG = bytes_to_long(b"DH{")
-print(hex(FLAG))
-afsr = AFSR(0x1234567890)
-
-leaked_bytes = afsr.getNbytes(200)
-
-# Here is hint for you :P
-print(leaked_bytes.hex())
