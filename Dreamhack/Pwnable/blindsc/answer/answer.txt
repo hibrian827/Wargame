@@ -1,0 +1,5 @@
+1. ngrok를 이용해 내 기기의 포트포워딩 실행 (ex: ngrok tcp 5000)
+2. ngrok의 port를 my_port에 입력
+3. 내 기기에서 "nc -lvnp <(1)에서 지정한 포트 번호 (ex: 5000)>" 실행하여 listen
+4. answer.py의 코드 실행하여 쉘 코드 입력
+5. listen 대기해 놓은 쉘에서 원격 기기의 쉴 접속
