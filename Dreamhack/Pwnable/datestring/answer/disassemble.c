@@ -1,4 +1,14 @@
-int __fastcall calendar(char *a1, unsigned int *a2)
+int flag()
+{
+  char *argv[4]; // [rsp+0h] [rbp-20h] BYREF
+
+  argv[3] = "/bin/sh";
+  argv[0] = "/bin/sh";
+  argv[1] = 0;
+  return execve("/bin/sh", argv, 0LL);
+}
+
+int calendar(char *a1, unsigned int *a2)
 {
   int v3[12]; // [rsp+10h] [rbp-50h] BYREF
   int v4[8]; // [rsp+40h] [rbp-20h] BYREF
@@ -34,7 +44,7 @@ int __fastcall calendar(char *a1, unsigned int *a2)
            a2[5] + 1900);
 }
 
-int __fastcall main(int argc, const char **argv, const char **envp)
+int main(int argc, const char **argv, const char **envp)
 {
   int v3; // eax
   int sec; // [rsp+18h] [rbp-78h] BYREF
