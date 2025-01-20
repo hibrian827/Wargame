@@ -9,9 +9,9 @@ void busted()
 
 unsigned int init()
 {
-  setvbuf(stdin, 0LL, 2, 0LL);
-  setvbuf(stdout, 0LL, 2, 0LL);
-  setvbuf(stderr, 0LL, 2, 0LL);
+  setvbuf(stdin, 0, 2, 0);
+  setvbuf(stdout, 0, 2, 0);
+  setvbuf(stderr, 0, 2, 0);
   signal(14, (__sighandler_t)busted);
   return alarm(0x3Cu);
 }
@@ -69,17 +69,17 @@ int main(int argc, const char **argv, const char **envp)
   v25 = 0;
   v22 = 0;
   v26 = 0;
-  *(long *)src = 0x6E7233767977LL;
-  memset(v20, 0, 0x80uLL);
-  *(long *)dest = 0LL;
-  v19 = 0LL;
-  *(long *)v16 = 0LL;
-  v17 = 0LL;
-  *(long *)s2 = 0LL;
-  v15 = 0LL;
-  ptr = malloc(8uLL);
+  *(long *)src = 0x6E7233767977;
+  memset(v20, 0, 0x80);
+  *(long *)dest = 0;
+  v19 = 0;
+  *(long *)v16 = 0;
+  v17 = 0;
+  *(long *)s2 = 0;
+  v15 = 0;
+  ptr = malloc(8);
   stream = fopen("/dev/urandom", "r");
-  fread(ptr, 7uLL, 1uLL, stream);
+  fread(ptr, 7, 1, stream);
   v3 = src;
   v4 = dest;
   strcpy(dest, src);
@@ -110,7 +110,7 @@ int main(int argc, const char **argv, const char **envp)
         fflush(stdout);
         __isoc99_scanf("%8s", s2);
         v3 = s2;
-        if ( !strncmp((const char *)ptr, s2, 7uLL) )
+        if ( !strncmp((const char *)ptr, s2, 7) )
         {
           printf("Name : ");
           fflush(stdout);
