@@ -27,6 +27,7 @@ RUN pip3 install --upgrade pip
 RUN pip3 install pwntools
 
 # install one_gadget command
-RUN gem install one_gadget
+RUN gem install elftools -v 1.1.3
+RUN gem install one_gadget -v 1.9.0
 
 WORKDIR /root
