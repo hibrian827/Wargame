@@ -7,11 +7,11 @@ ssize_t writeln(long a1)
 
   for ( i = 0; ; ++i )
   {
-    write(1, (const void *)(i + a1), 1uLL);
+    write(1, (const void *)(i + a1), 1);
     if ( *(char *)(i + a1) == 46 )
       break;
   }
-  return write(1, "\n", 1uLL);
+  return write(1, "\n", 1);
 }
 
 int readint()
@@ -19,7 +19,7 @@ int readint()
   char nptr[24]; // [rsp+0h] [rbp-20h] BYREF
   unsigned long v2; // [rsp+18h] [rbp-8h]
 
-  v2 = __readfsqword(0x28u);
+  v2 = __readfsqword(0x28);
   readln(nptr);
   return atoi(nptr);
 }
@@ -31,7 +31,7 @@ long readln(long a1)
 
   for ( i = 0; i <= 255; ++i )
   {
-    read(0, (void *)(i + a1), 1uLL);
+    read(0, (void *)(i + a1), 1);
     result = *(unsigned int *)(i + a1);
     if ( (char)result == 46 )
       break;
@@ -50,9 +50,9 @@ unsigned long run()
   char v2[264]; // [rsp+10h] [rbp-110h] BYREF
   // canary [rsp+118h] [rbp-8h]
 
-  setvbuf(stdin, 0LL, 2, 0LL);
-  setvbuf(stdout, 0LL, 2, 0LL);
-  setvbuf(stderr, 0LL, 2, 0LL);
+  setvbuf(stdin, 0, 2, 0);
+  setvbuf(stdout, 0, 2, 0);
+  setvbuf(stderr, 0, 2, 0);
   writeln("Mirin, It's the End of Period with Period.");
   v2[0] = 46;
   while ( 1 )
@@ -62,11 +62,11 @@ unsigned long run()
       writeln("1: read.");
       writeln("2: write.");
       writeln("3: clear.");
-      write(1, "> ", 2uLL);
+      write(1, "> ", 2);
       v1 = readint();
       if ( v1 != 3 )
         break;
-      cleara(v2, 256LL);
+      cleara(v2, 256);
     }
     if ( v1 > 3 )
       break;
