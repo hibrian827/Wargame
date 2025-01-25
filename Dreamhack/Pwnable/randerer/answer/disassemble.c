@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <time.h>
 
 long canary;
@@ -14,7 +16,7 @@ void init_canary()
   long v1; // rbx
   int i; // [rsp+Ch] [rbp-14h]
 
-  v0 = time(0LL);
+  v0 = time(0);
   srand(v0);
   for ( i = 0; i <= 7; ++i )
   {
@@ -29,14 +31,14 @@ int main(int argc, const char **argv, const char **envp)
   char buf[16]; // [rsp+0h] [rbp-20h] BYREF
   long v6; // [rsp+10h] [rbp-10h]
 
-  setvbuf(stdin, 0LL, 2, 0LL);
-  setvbuf(stdout, 0LL, 2, 0LL);
-  setvbuf(stderr, 0LL, 2, 0LL);
+  setvbuf(stdin, 0, 2, 0);
+  setvbuf(stdout, 0, 2, 0);
+  setvbuf(stderr, 0, 2, 0);
   v6 = canary;
-  v3 = time(0LL);
+  v3 = time(0);
   printf("time: %ld\n", v3);
   printf("input your data: ");
-  read(0, buf, 0x100uLL);
+  read(0, buf, 0x100);
   if ( v6 != canary )
   {
     puts("*** stack smashing detected ***: terminated Aborted");
