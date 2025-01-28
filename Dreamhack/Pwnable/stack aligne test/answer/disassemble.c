@@ -56,12 +56,12 @@ long execute_stage1(long a1)
   v3 = a1;
   v4 = &v2;
   check_alignment(&v2);
-  if ( (stage_key ^ 0xCAFEBABELL) != v3 )
+  if ( (stage_key ^ 0xCAFEBABE) != v3 )
   {
     puts("[-] Invalid stage 1 key!");
     exit(0);
   }
-  stage1_clear = 1LL;
+  stage1_clear = 1;
   result = stage_key ^ v3;
   stage_key ^= v3;
   return result;
@@ -82,12 +82,12 @@ long execute_stage2(long a1)
   }
   v4 = &v2;
   check_alignment(&v2);
-  if ( (stage_key ^ 0xF00DBABELL) != v3 )
+  if ( (stage_key ^ 0xF00DBABE) != v3 )
   {
     puts("[-] Invalid stage 2 key!");
     exit(0);
   }
-  stage2_clear = 1LL;
+  stage2_clear = 1;
   result = stage_key ^ v3;
   stage_key ^= v3;
   return result;
@@ -108,7 +108,7 @@ int print_stage_info()
   else
     v1 = "Not cleared";
   printf("Stage 2: %s\n", v1);
-  return printf("Current stage key: 0x%llx\n", stage_key);
+  return printf("Current stage key: 0x%x\n", stage_key);
 }
 
 ssize_t vulnerable()
@@ -117,15 +117,15 @@ ssize_t vulnerable()
 
   print_stage_info();
   printf("Input: ");
-  return read(0, buf, 0x100uLL);
+  return read(0, buf, 0x100);
 }
 
 long init()
 {
   long result; // rax
 
-  setvbuf(stdin, 0LL, 2, 0LL);
-  setvbuf(_bss_start, 0LL, 2, 0LL);
+  setvbuf(stdin, 0, 2, 0);
+  setvbuf(_bss_start, 0, 2, 0);
   result = rand() ^ 0xDEADBEEF;
   stage_key = (unsigned int)result;
   return result;
