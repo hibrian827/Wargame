@@ -1,10 +1,10 @@
 from pwn import *
 
-port = 23778
-rem = remote("host3.dreamhack.games", port)
+port = 24488
+rem = remote("host1.dreamhack.games", port)
 
-elf = ELF("./Tcache Poisoning/problem/tcache_poison")
-lib = ELF("./Tcache Poisoning/problem/libc-2.27.so")
+elf = ELF("./Pwnable/Tcache Poisoning/problem/tcache_poison")
+lib = ELF("./Pwnable/Tcache Poisoning/problem/libc-2.27.so")
 
 def slog(symbol, addr): return success(symbol + ': ' + hex(addr))
 
