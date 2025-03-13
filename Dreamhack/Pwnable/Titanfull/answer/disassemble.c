@@ -1,3 +1,18 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+// 144f <lunch>:
+// 144f:       f3 0f 1e fa             endbr64 
+// 1453:       55                      push   %rbp
+// 1454:       48 89 e5                mov    %rsp,%rbp
+// 1457:       90                      nop
+// 1458:       5d                      pop    %rbp
+// 1459:       c3                      ret   
+
+int check;
+int titan;
+
 int Init()
 {
   setvbuf(stdin, 0LL, 2, 0LL);
@@ -13,7 +28,7 @@ unsigned long vanguard()
   v2 = __readfsqword(0x28);
   puts("You selected RSR vanguard class titan!");
   printf("Please enter the name of titan : ");
-  __isoc99_scanf("%s", v1);
+  scanf("%s", v1);
   check = 1;
   return __readfsqword(0x28) ^ v2;
 }
@@ -34,7 +49,7 @@ int select_titan()
   v2[6] = (long)"Monarch";
   for ( i = 1; i <= 7; ++i ) printf("%d. %s\n", (unsigned int)i, (const char *)v2[i - 1]);
   printf("select titan: ");
-  __isoc99_scanf("%d", &titan);
+  scanf("%d", &titan);
   if ( titan > 0 && titan <= 7 )
   {
     result = printf("You select %s.\n", (const char *)v2[titan - 1]);
@@ -75,7 +90,7 @@ void menu()
       puts("2. Lunch Titan");
       puts("3. exit");
       printf("> ");
-      __isoc99_scanf("%d", &v0);
+      scanf("%d", &v0);
       if ( v0 != 7274 ) break;
       if ( check == 1 ) goto LABEL_18;
       vanguard();
