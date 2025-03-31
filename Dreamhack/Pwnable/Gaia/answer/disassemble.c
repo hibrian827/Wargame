@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <signal.h>
+
 unsigned int init()
 {
   setvbuf(stdin, 0LL, 2, 0LL);
@@ -28,24 +31,6 @@ void vuln(long a1, long a2)
   unsigned long v4; // [rsp+88h] [rbp-8h]
 
   v4 = __readfsqword(0x28u);
-  control(1LL);
-  init(1LL, a2, v2);
-  print_str("Good Job!!\n");
-  print_str("Who are you?? : ");
-  fgets(s, 130, stdin);
-  print_str("Congratulations ");
-  print_str(s);
-  control(1LL);
-  exit(1);
-}
-
-void vuln(long a1, long a2)
-{
-  long v2; // rdx
-  char s[136]; // [rsp+0h] [rbp-90h] BYREF
-  unsigned long v4; // [rsp+88h] [rbp-8h]
-
-  v4 = __readfsqword(0x28);
   control(1LL);
   init(1LL, a2, v2);
   print_str("Good Job!!\n");
