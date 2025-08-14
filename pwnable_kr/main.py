@@ -1,10 +1,10 @@
 from pwn import *
 
 s = ssh(
-  user='fd',
+  user='bof',
   host='pwnable.kr',
   port=2222,
   password='guest'
 )
 
-rem = s.process()
+rem = s.process(['nc', '0', '9000'])
