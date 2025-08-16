@@ -1,0 +1,18 @@
+services:
+  server:
+    build: 
+      context: ./server
+      args:
+        DOCKER_GID: ${DOCKER_GID}
+        HOST_ROOT: ${HOST_ROOT}
+    ports:
+      - 9898:9898
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+  app:
+    build: ./app
+    image: app:latest
+    tty: true
+    stdin_open: true

@@ -1,0 +1,5 @@
+#!/home/lourcode/enki/cce2025/CPY/dist/Python-3.13.5/install/bin/python3.13
+
+import pydoc
+if __name__ == '__main__':
+    pydoc.cli()
